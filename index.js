@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/mydb";
 const uuidv1 = require('uuid/v1');
+const queryString = require('query-string');
 
 app.use(bodyParser.json());
 
@@ -53,7 +54,7 @@ app.post('/AdminLogin', function(req, res){
 	}
 })
 
-//New blog route
+//NewBlog route
 app.post('/NewBlog', function(req, res){	//{author: "Gautam", title: "blah", description: "blahblah"}
 	body = req.body;
 	body._id = uuidv1();
@@ -79,6 +80,31 @@ app.post('/NewBlog', function(req, res){	//{author: "Gautam", title: "blah", des
 	})
 });
 
+//GET all blogs
+app.get('/BlogFeed', function(req, res){
+	MongoClient.connect(url, function(err, db){
+		if (err) throw err;
+		db.collection('blogs').find({}).toArray(function(err, result){
+			if (err) throw err;
+			res.body = result;
+			db.close();
+		})
+	})
+})
+
+//GET details of single blog post (blog id from URL querystring)
+app.get('/Blog', function(req, res){	
+	var parsedQueryString = queryString.parse(location.search);
+	blog_id = parsedQueryString.blogid;
+	MongoClient.connect(url, function(err, db){
+		if (err) throw err;
+		db.collection('blogs').find({_id: blog_id}).toArray(function(err, result){
+			if (err) throw err;
+			res.body = result;
+			db.close();
+		})
+	})
+})
 
 http.listen(1337, function(){
 	console.log("Listening at port 1337\n");
