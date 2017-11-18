@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/M4NottyBoy/blog-assignment/issues"
   },
-  "homepage": "https://github.com/M4NottyBoy/blog-assignment#readme"
+  "homepage": "https://github.com/M4NottyBoy/blog-assignment#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "http": "0.0.0",
+    "mongodb": "^2.2.33"
+  }
 }
