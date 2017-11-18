@@ -20,6 +20,7 @@ app.post('/', function(req, res){
 	  			db.collection("users").insertOne(body, function(err, res) {
 	  				if (err) throw err;
 	  				console.log("New user " + body.username + " connected.");
+	  				console.log(body.username + " given id: " + body._id);
 	  				console.log(body.username + " signed up.\n");
 	  				db.close();
 	  			});
