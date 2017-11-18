@@ -8,7 +8,7 @@ const uuidv1 = require('uuid/v1');
 app.use(bodyParser.json());
 
 //User login/signup route
-app.post('/', function(req, res){
+app.post('/UserLogin', function(req, res){ //{username: "Gautam", password: "ggwp"}
 	var body = req.body;
 	MongoClient.connect(url, function(err, db) {
 	  	if (err) throw err;
@@ -52,6 +52,33 @@ app.post('/AdminLogin', function(req, res){
 		console.log("Incorrect credentials entered. Try Again.");
 	}
 })
+
+//New blog route
+app.post('/NewBlog', function(req, res){	//{author: "Gautam", title: "blah", description: "blahblah"}
+	body = req.body;
+	body._id = uuidv1();
+	body.timestamp = Date.now();
+	body.comments = "";
+	MongoClient.connect(url, function(err, db){
+		if (err) throw err;
+		db.collection('users').find({username: body.author}).toArray(function(err, result){
+			if (err) throw err;
+			if(result.length){
+				db.collection('blogs').insertOne(body, function(err, result){
+					if (err) throw err;
+					console.log(body);
+					console.log(body.author + " blog posted.\n");
+					db.close();
+				})
+			}
+			else{
+				console.log(body.author + " needs to sign up.\nBlog not posted.\n")
+				db.close();
+			}
+		})
+	})
+});
+
 
 http.listen(1337, function(){
 	console.log("Listening at port 1337\n");
