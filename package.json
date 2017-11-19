@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.16.2",
     "http": "0.0.0",
+    "logger": "0.0.1",
     "mongodb": "^2.2.33",
     "query-string": "^5.0.1",
     "url-parse": "^1.2.0",

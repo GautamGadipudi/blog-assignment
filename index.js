@@ -6,6 +6,7 @@ var url = "mongodb://localhost:27017/mydb";
 var uuidv1 = require('uuid/v1');
 var URL = require('url');
 
+
 app.use(bodyParser.json());
 
 //User login/signup route
@@ -60,7 +61,7 @@ app.post('/NewBlog', function(req, res){	//{author: "Gautam", title: "blah", des
 	body = req.body;
 	body._id = uuidv1();
 	body.timestamp = Date.now();
-	body.comments = "";
+	body.comments = [];
 	MongoClient.connect(url, function(err, db){
 		if (err) throw err;
 		db.collection('users').find({username: body.author}).toArray(function(err, result){
@@ -98,7 +99,7 @@ app.get('/BlogFeed', function(req, res){
 	
 })
 
-//GET details of single blog post (blog id from URL querystring)
+//GET details of single blog post (blogid from URL querystring)
 app.get('/Blog', function(req, res){
 	var queryData = URL.parse(req.url, true).query;
 	MongoClient.connect(url, function(err, db){
@@ -116,6 +117,32 @@ app.get('/Blog', function(req, res){
 	})
 })
 
+app.post('/Comment', function(req, res){	//{blog_id: "34refdwepf90we", user_id: "saldhidhew333", comment: "blahblah"}
+	var body = req.body;
+	var comment = {};
+	comment._id = uuidv1();
+	comment.user_id = body.user_id;
+	comment.comment = body.comment;
+	comment.timestamp = Date.now();
+	MongoClient.connect(url, function(err, db){
+		if (err) throw err;
+		var query = {_id: body.blog_id};
+		db.collection('blogs').find(query).toArray(function(err, result){
+			var newValues = result[0];
+			newValues.comments.push(comment);
+			db.collection('blogs').updateOne(query, newValues, function(err, result){
+				if (err) throw err;
+				console.log(comment.user_id + " commented on blog " + body.blog_id);
+			})
+		})
+		
+		
+	})
+
+
+})
+
+//DELETE blog (blogid from URL querystring)
 app.delete('/Admin', function(req, res){
 	var queryData = URL.parse(req.url, true).query;
 	MongoClient.connect(url, function(err, db){
@@ -123,7 +150,7 @@ app.delete('/Admin', function(req, res){
 		db.collection('blogs').find({_id: queryData.blogid}).toArray(function(err, result){
 			if (result.length){
 				db.collection('blogs').remove({_id: queryData.blogid});
-				console.log(queryData.blogid + " deleted.");
+				console.log("Blog: "+ queryData.blogid + " deleted.");
 			}
 			else{
 				console.log("Invalid blog_id.");
