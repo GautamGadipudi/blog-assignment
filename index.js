@@ -83,11 +83,12 @@ app.post('/NewBlog', function(req, res){	//{author: "Gautam", title: "blah", des
 });
 
 //GET all blogs
-app.get('/BlogFeed', function(req, res){
-	
+app.get('/BlogFeed', function(req, res){	//use querystring to get filtered BlogFeed
+		var queryData = URL.parse(req.url, true).query;
+		console.log(queryData);
 		MongoClient.connect(url, function(err, db){
 			if (err) throw err;
-			db.collection('blogs').find({}).toArray(function(err, result){
+			db.collection('blogs').find(queryData).toArray(function(err, result){
 				if (err) throw err;
 				res.status(200).send(result);
 				
