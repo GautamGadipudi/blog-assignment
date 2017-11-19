@@ -10,7 +10,6 @@ var URL = require('url');
 app.use(bodyParser.json());
 
 //User login/signup route
-	  		
 app.post('/UserLogin', function(req, res) { //{username: "Gautam", password: "ggwp"}
     var body = req.body;
     body.type = "user";
@@ -46,7 +45,7 @@ app.post('/UserLogin', function(req, res) { //{username: "Gautam", password: "gg
 })
 
 //Admin login route
-app.post('/AdminLogin', function(req, res) {
+app.post('/AdminLogin', function(req, res) {	//{username: "blah", password: "blahblah"}
     if (req.body.password == "CPAdmin") {
         console.log(req.body.username + " logged in as: Admin");
     } else {
@@ -79,8 +78,8 @@ app.post('/NewBlog', function(req, res) { //{author: "Gautam", title: "blah", de
     })
 });
 
-//GET all blogs
-app.get('/BlogFeed', function(req, res) { //use querystring to get filtered BlogFeed
+//GET all blogs (use querystring for filter)
+app.get('/BlogFeed', function(req, res) { 
     var queryData = URL.parse(req.url, true).query;
     console.log(queryData);
     MongoClient.connect(url, function(err, db) {
@@ -164,11 +163,8 @@ app.put('/Admin/UpdatePost', function(req, res){
 		db.collection('blogs').find({_id: queryData.blogid}).toArray(function(req, result){
 			if (result.length){
 				var newValues = result[0];
-
 				newValues.description = body.description;
-
 				db.collection('blogs').updateOne(queryData, newValues, function(err, result){
-					console.log(queryData);
 					if (err) throw err;
 					console.log("Blog: " + queryData.blogid + " updated.");
 				})
