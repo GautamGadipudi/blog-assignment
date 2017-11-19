@@ -3,14 +3,15 @@
 Basic useful features:
 
 ## New User sign up
-Login
-(GET) GET All Blog Posts
-(GET) GET Details of single blog posts (along with comments)
-(POST) Create a new blog post
-(POST) Add comments for a blog post
-(GET) Get filtered list of posts (filter by title, author)
-(DELETE) Delete an existing blog post
-(PUT) Update an existing blog post
+* User Login and signup
+* Admin Login
+* (GET) GET All Blog Posts
+* (GET) GET Details of single blog posts (along with comments)
+* (POST) Create a new blog post
+* (POST) Add comments for a blog post
+* (GET) Get filtered list of posts (filter by title, author)
+* (DELETE) Delete an existing blog post
+* (PUT) Update an existing blog post
 
 ## Steps to get the API running: 
 	
@@ -34,12 +35,12 @@ Example JSON request:
 ```
 {"username": "Rick", "password": "blehbleh"}
 ```
+
 ### /AdminLogin
 HTTP POST
-
 Description: Login for admin. (default admin password: CPAdmin)
 Example JSON request:
-``` 
+```
 {"username": "Morty", "password": "blehbleh"}
 ```
 ### /BlogFeed
