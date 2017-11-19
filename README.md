@@ -65,7 +65,7 @@ Example JSON request:
 #### /Admin/DeletePost
 HTTP DELETE
 Description: Removes all the documents that are returned with querystring as query.
-### /Admin/UpdatePost
+#### /Admin/UpdatePost
 HTTP PUT
 Description: Updates the description of a blog. blog_id from querystring and new description from JSON request.
 Example JSON request:
