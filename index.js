@@ -116,6 +116,21 @@ app.get('/Blog', function(req, res){
 	})
 })
 
+app.delete('/Admin', function(req, res){
+	var queryData = URL.parse(req.url, true).query;
+	MongoClient.connect(url, function(err, db){
+		if (err) throw err;
+		db.collection('blogs').find({_id: queryData.blogid}).toArray(function(err, result){
+			if (result.length){
+				db.collection('blogs').remove({_id: queryData.blogid});
+				console.log(queryData.blogid + " deleted.");
+			}
+			else{
+				console.log("Invalid blog_id.");
+			}
+		})
+	})
+})
 http.listen(1337, function(){
 	console.log("Listening at port 1337\n");
 });
