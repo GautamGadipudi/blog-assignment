@@ -17,7 +17,7 @@ Steps to get the API running:
 	* Clone the repo
 	* Open a terminal in the root of the repo
 	* Type the following in the terminal to get all the node_module dependencies:
-	```bash
+	```
 	npm install
 	```
 	* Then to get the API running, type the following in terminal: 
@@ -31,14 +31,14 @@ Different endpoints and their properties:
 		* HTTP POST
 		* Description: Login existing users or signup new users.
 		* Example JSON request: 
-		```JSON
+		```
 		{"username": "Rick", "password": "blehbleh"}
 		```
 	* /AdminLogin
 		* HTTP POST
 		* Description: Login for admin. (default admin password: CPAdmin)
 		* Example JSON request:
-		```JSON 
+		``` 
 		{"username": "Morty", "password": "blehbleh"}
 		```
 	* /BlogFeed
@@ -48,7 +48,7 @@ Different endpoints and their properties:
 		* HTTP POST
 		* Description: Creates a new blog for a user. Takes author from the JSON request.
 		* Example JSON request: 
-		```JSON
+		```
 		{"author": "Gautam", "title": "blah", "description": "blahblah"}
 		```
 	* /Blog
@@ -58,7 +58,7 @@ Different endpoints and their properties:
 		* HTTP POST
 		* Description: Takes a comment (in JSON) as request and appends it to appropriate blog.
 		* Example JSON request:
-		```JSON
+		```
 		{"blog_id": "34refdwepf90we", "user_id": "saldhidhew333", "comment": "blahblah"}
 		```
 	* /Admin/DeletePost
@@ -68,6 +68,6 @@ Different endpoints and their properties:
 		* HTTP PUT
 		* Description: Updates the description of a blog. blog_id from querystring and new description from JSON request.
 		* Example JSON request:
-		```JSON
+		```
 		{"description": "New description"}
 		```
