@@ -1,8 +1,6 @@
 # blog-assignment
 
 Basic useful features:
-
-### New User sign up
 * User Login and signup
 * Admin Login
 * (GET) GET All Blog Posts
