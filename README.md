@@ -15,13 +15,14 @@ Basic useful features:
 
 ### Steps to get the API running: 
 	
-Clone the repo
-Open a terminal in the root of the repo
-Type the following in the terminal to get all the node_module dependencies:
+1. Clone the repo
+2. Run mongoDB in the background
+3. Open a terminal in the root of the repo
+4. Type the following in the terminal to get all the node_module dependencies:
 ```
 npm install
 ```
-Then to get the API running, type the following in terminal: 
+5. Then to get the API running, type the following in terminal: 
 ```	
 node index.js
 ```
