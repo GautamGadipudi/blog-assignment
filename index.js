@@ -137,12 +137,12 @@ app.post('/Comment', function(req, res) { //{blog_id: "34refdwepf90we", user_id:
 
 })
 
-//DELETE blog (blogid from URL querystring)
+//DELETE blog (querystring will be the query to delete docs)
 app.delete('/Admin/DeletePost', function(req, res) {
     var queryData = URL.parse(req.url, true).query;
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
-        db.collection('blogs').find({ _id: queryData.blogid }).toArray(function(err, result) {
+        db.collection('blogs').find(queryData).toArray(function(err, result) {
             if (result.length) {
                 db.collection('blogs').remove({ _id: queryData.blogid });
                 console.log("Blog: " + queryData.blogid + " deleted.");
