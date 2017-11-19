@@ -36,6 +36,7 @@ Example JSON request:
 ```
 ### /AdminLogin
 HTTP POST
+
 Description: Login for admin. (default admin password: CPAdmin)
 Example JSON request:
 ``` 
