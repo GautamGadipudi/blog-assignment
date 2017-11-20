@@ -7,16 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-  	//My previous github username was M4NottyBoy. Now it is GautamGadipudi
     "type": "git",
-    "url": "git+https://github.com/M4NottyBoy/blog-assignment.git"
+    "url": "git+https://github.com/GautamGadipudi/blog-assignment.git"
   },
   "author": "Gautam Gadipudi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/M4NottyBoy/blog-assignment/issues"
+    "url": "https://github.com/GautamGadipudi/blog-assignment/issues"
   },
-  "homepage": "https://github.com/M4NottyBoy/blog-assignment#readme",
+  "homepage": "https://github.com/GautamGadipudi/blog-assignment#readme",
   "dependencies": {
     "express": "^4.16.2",
     "http": "0.0.0",
