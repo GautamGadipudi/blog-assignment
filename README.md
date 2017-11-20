@@ -24,6 +24,7 @@ npm install
 ```	
 node index.js
 ```
+6. Postman documentation link: [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2dfdaa126f6b68264b1f)
 
 ### Different endpoints and their properties: 
 
