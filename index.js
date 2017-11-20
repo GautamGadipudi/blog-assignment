@@ -20,7 +20,7 @@ app.post('/UserLogin', function(req, res) { //{username: "Gautam", password: "gg
             if (err) throw err;
             if (result.length == 0) { //signup
                 body._id = uuidv1();
-                db.collection("users").insertOne(body, function(err, res) {
+                db.collection("users").insertOne(body, function(err, result) {
                     if (err) throw err;
                     console.log("New user " + body.username + " connected.");
                     console.log(body.username + " given id: " + body._id);
@@ -28,7 +28,8 @@ app.post('/UserLogin', function(req, res) { //{username: "Gautam", password: "gg
                     res.status(200).send();
                     db.close();
                 });
-            } else { //login
+            } 
+            else { //login
                 db.collection("users").find(body).toArray(function(err, result) {
                     if (err) throw err;
 
@@ -48,7 +49,7 @@ app.post('/UserLogin', function(req, res) { //{username: "Gautam", password: "gg
 })
 
 //Admin login route
-app.post('/AdminLogin', function(req, res) {	//{username: "blah", password: "blahblah"}
+app.post('/AdminLogin', function(req, res) { //{username: "blah", password: "blahblah"}
     if (req.body.password == "CPAdmin") {
         console.log(req.body.username + " logged in as: Admin");
         res.status(200).send();
@@ -85,9 +86,9 @@ app.post('/NewBlog', function(req, res) { //{author: "Gautam", title: "blah", de
 });
 
 //GET all blogs (use querystring for filter)
-app.get('/BlogFeed', function(req, res) { 
+app.get('/BlogFeed', function(req, res) {
     var queryData = URL.parse(req.url, true).query;
-    
+
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         db.collection('blogs').find(queryData).toArray(function(err, result) {
@@ -112,7 +113,7 @@ app.get('/Blog', function(req, res) {
             if (result.length) {
                 res.status(200).send(result);
             } else {
-            	res.status(400).send();
+                res.status(400).send();
                 console.log("Invalid blog_id.\n");
             }
             db.close();
@@ -132,18 +133,18 @@ app.post('/Comment', function(req, res) { //{blog_id: "34refdwepf90we", user_id:
         if (err) throw err;
         var query = { _id: body.blog_id };
         db.collection('blogs').find(query).toArray(function(err, result) {
-        	if (result.length){
-	            var newValues = result[0];
-	            newValues.comments.push(comment);
-	            db.collection('blogs').updateOne(query, newValues, function(err, result) {
-	                if (err) throw err;
-	                console.log(comment.user_id + " commented on blog " + body.blog_id);
-	            })
-        	}
-        	else{
-        		console.log("Invalid blog to comment");
-        		res.status(400).send();
-        	}
+            if (result.length) {
+                var newValues = result[0];
+                newValues.comments.push(comment);
+                db.collection('blogs').updateOne(query, newValues, function(err, result) {
+                    if (err) throw err;
+                    console.log(comment.user_id + " commented on blog " + body.blog_id);
+                    res.status(200).send();
+                })
+            } else {
+                console.log("Invalid blog to comment");
+                res.status(400).send();
+            }
         })
     })
 
@@ -169,29 +170,28 @@ app.delete('/Admin/DeletePost', function(req, res) {
 })
 
 //Update blog using PUT (blogid from URL querystring)
-app.put('/Admin/UpdatePost', function(req, res){
-	
-	var queryData = URL.parse(req.url, true).query;
-	var body = req.body;
-	MongoClient.connect(url, function(err, db){
-		if (err) throw err;
-		db.collection('blogs').find({_id: queryData.blogid}).toArray(function(req, result){
-			if (result.length){
-				var newValues = result[0];
-				newValues.description = body.description;
-				db.collection('blogs').updateOne(queryData, newValues, function(err, result){
-					if (err) throw err;
-					console.log("Blog: " + queryData.blogid + " updated.");
-					res.status(200).send();
-				})
-			}
-			else{
-				console.log("Invalid blog_id.")
-				res.status(400).send();
-			}
-		})
-	
-	})
+app.put('/Admin/UpdatePost', function(req, res) {
+
+    var queryData = URL.parse(req.url, true).query;
+    var body = req.body;
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        db.collection('blogs').find({ _id: queryData.blogid }).toArray(function(req, result) {
+            if (result.length) {
+                var newValues = result[0];
+                newValues.description = body.description;
+                db.collection('blogs').updateOne(queryData, newValues, function(err, result) {
+                    if (err) throw err;
+                    console.log("Blog: " + queryData.blogid + " updated.");
+                    res.status(200).send();
+                })
+            } else {
+                console.log("Invalid blog_id.")
+                res.status(400).send();
+            }
+        })
+
+    })
 
 })
 
