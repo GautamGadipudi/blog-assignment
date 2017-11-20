@@ -39,7 +39,7 @@ node index.js
 HTTP POST
 Description: Login existing users or signup new users.
 Example JSON request: 
-```
+```Javascrpit
 {"username": "Rick", "password": "blehbleh"}
 ```
 
@@ -47,7 +47,7 @@ Example JSON request:
 HTTP POST
 Description: Login for admin. (default admin password: CPAdmin)
 Example JSON request:
-```
+```Javascrpit
 {"username": "Morty", "password": "blehbleh"}
 ```
 #### /BlogFeed
@@ -57,7 +57,7 @@ Description: Gets all the blogs from the db. Also does a filter if appropriate q
 HTTP POST
 Description: Creates a new blog for a user. Takes author from the JSON request.
 Example JSON request: 
-```
+```Javascrpit
 {"author": "Gautam", "title": "blah", "description": "blahblah"}
 ```
 #### /Blog
@@ -67,7 +67,7 @@ Description: Requests the blog. Takes blogid from querystring.
 HTTP POST
 Description: Takes a comment (in JSON) as request and appends it to appropriate blog.
 Example JSON request:
-```
+```Javascrpit
 {"blogid": "34refdwepf90we", "userid": "saldhidhew333", "comment": "blahblah"}
 ```
 #### /Admin/DeletePost
@@ -77,6 +77,6 @@ Description: Removes all the documents that are returned with querystring as que
 HTTP PUT
 Description: Updates the description of a blog. blog_id from querystring and new description from JSON request.
 Example JSON request:
-```
+```Javascrpit
 {"description": "New description"}
 ```
