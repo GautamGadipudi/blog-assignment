@@ -11,6 +11,13 @@ Basic useful features:
 * (DELETE) Delete an existing blog post
 * (PUT) Update an existing blog post
 
+### Softwares required to run the API: 
+
+1. NodeJs (v6.11.0)
+2. Npm (v3.10.10)
+3. MongoDB
+4. POSTMAN
+
 ### Steps to get the API running: 
 	
 1. Clone the repo
