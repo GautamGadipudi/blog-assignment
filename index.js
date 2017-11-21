@@ -8,39 +8,53 @@ var URL = require('url');
 
 app.use(bodyParser.json());
 
-//User login/signup route
+//User login
 app.post('/UserLogin', function(req, res) { //{username: "Gautam", password: "ggwp"}
 	var body = req.body;
 	body.type = "user";
 	MongoClient.connect(url, function(err, db) {
 		if (err) throw err;
-		db.collection("users").find({ username: body.username }).toArray(function(err, result) {
+		db.collection("users").find(body).toArray(function(err, result) {
 			if (err) throw err;
-            if (result.length == 0) { //signup
-            	body._id = uuidv1();
-            	db.collection("users").insertOne(body, function(err, result) {
-            		if (err) throw err;
-            		console.log("New user " + body.username + " connected.");
-            		console.log(body.username + " given id: " + body._id);
-            		console.log(body.username + " signed up.\n");
-            		res.status(200).send();
-            		db.close();
-            	});
-            } else { //login
-            	db.collection("users").find(body).toArray(function(err, result) {
-            		if (err) throw err;
+			if (result.length) {
+				console.log(body.username + " logged in.\n");
+				res.status(200).send();
+			} 
+			else {
+				console.log(body.username + " login failed.\n");
+				res.status(401).send();
+			}
+		})
 
-            		if (result.length) {
-            			console.log(body.username + " logged in.\n");
-            			res.status(200).send();
-            		} else {
-            			console.log(body.username + " login failed.\n");
-            			res.status(400).send();
-            		}
-            	})
-            }
-        });
+
 	});
+})
+
+//User Sign up
+app.post('/UserSignUp', function(req, res) {
+	var body = req.body;
+	MongoClient.connect(url, function(err, db) {
+		if (err) throw err;
+		db.collection('users').find({username: body.username}).toArray(function(err, result) {
+			if (err) throw err;
+			if (result.length) {
+				console.log("Username " + body.username + " already taken.");
+				res.status(400).send();
+			}
+			else {
+				console.log(result)
+				body._id = uuidv1();
+				body.type = "user";
+				db.collection("users").insertOne(body, function(err, result) {
+					if (err) throw err;
+					console.log(body.username + " given id: " + body._id);
+					console.log(body.username + " signed up.\n");
+					res.status(200).send();
+					db.close();
+				});
+			}
+		})
+	})
 })
 
 //Admin login route
@@ -50,7 +64,7 @@ app.post('/AdminLogin', function(req, res) { //{username: "blah", password: "bla
 		res.status(200).send();
 	} else {
 		console.log("Incorrect credentials entered. Try Again.");
-		res.status(400).send();
+		res.status(401).send();
 	}
 })
 
