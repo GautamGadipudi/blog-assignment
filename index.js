@@ -28,8 +28,7 @@ app.post('/UserLogin', function(req, res) { //{username: "Gautam", password: "gg
                     res.status(200).send();
                     db.close();
                 });
-            } 
-            else { //login
+            } else { //login
                 db.collection("users").find(body).toArray(function(err, result) {
                     if (err) throw err;
 
@@ -133,13 +132,22 @@ app.post('/Comment', function(req, res) { //{blog_id: "34refdwepf90we", user_id:
         if (err) throw err;
         var query = { _id: body.blog_id };
         db.collection('blogs').find(query).toArray(function(err, result) {
+            if (err) throw err;
             if (result.length) {
-                var newValues = result[0];
-                newValues.comments.push(comment);
-                db.collection('blogs').updateOne(query, newValues, function(err, result) {
+                db.collection('users').find({ _id: body.user_id }).toArray(function(err, result2) {
                     if (err) throw err;
-                    console.log(comment.user_id + " commented on blog " + body.blog_id);
-                    res.status(200).send();
+                    if (result2.length) {
+                        var newValues = result[0];
+                        newValues.comments.push(comment);
+                        db.collection('blogs').updateOne(query, newValues, function(err, result) {
+                            if (err) throw err;
+                            console.log(comment.user_id + " commented on blog " + body.blog_id);
+                            res.status(200).send();
+                        })
+                    } else {
+                    	console.log("User: " + body.user_id + " need to sign up before commenting.");
+                        res.status(400).send();
+                    }
                 })
             } else {
                 console.log("Invalid blog to comment");
