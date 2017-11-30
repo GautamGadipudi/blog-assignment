@@ -5,50 +5,53 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/mydb";
 var uuidv1 = require('uuid/v1');
 var URL = require('url');
+var log4js = require('log4js');
+var logger = log4js.getLogger();
+logger.level = 'info';
 
 app.use(bodyParser.json());
 
 //User login
 app.post('/UserLogin', function(req, res) { //{username: "Gautam", password: "ggwp"}
 	var body = req.body;
-	body.type = "user";
+	
 	MongoClient.connect(url, function(err, db) {
 		if (err) throw err;
 		db.collection("users").find(body).toArray(function(err, result) {
 			if (err) throw err;
+			
 			if (result.length) {
-				console.log(body.username + " logged in.\n");
+				logger.info(body.username + " logged in as: "+ result[0].type + "\n");
 				res.status(200).send();
 			} 
 			else {
-				console.log(body.username + " login failed.\n");
+				logger.info(body.username + " login failed.\n");
 				res.status(401).send();
 			}
 		})
-
-
 	});
 })
 
 //User Sign up
 app.post('/UserSignUp', function(req, res) {
 	var body = req.body;
+	
 	MongoClient.connect(url, function(err, db) {
 		if (err) throw err;
 		db.collection('users').find({username: body.username}).toArray(function(err, result) {
 			if (err) throw err;
 			if (result.length) {
-				console.log("Username " + body.username + " already taken.");
+				logger.info("Username " + body.username + " already taken.");
 				res.status(400).send();
 			}
 			else {
-				console.log(result)
+				logger.info(result)
 				body._id = uuidv1();
 				body.type = "user";
 				db.collection("users").insertOne(body, function(err, result) {
 					if (err) throw err;
-					console.log(body.username + " given id: " + body._id);
-					console.log(body.username + " signed up.\n");
+					logger.info(body.username + " given id: " + body._id);
+					logger.info(body.username + " signed up.\n");
 					res.status(200).send();
 					db.close();
 				});
@@ -60,10 +63,10 @@ app.post('/UserSignUp', function(req, res) {
 //Admin login route
 app.post('/AdminLogin', function(req, res) { //{username: "blah", password: "blahblah"}
 	if (req.body.password == "CPAdmin") {
-		console.log(req.body.username + " logged in as: Admin");
+		logger.info(req.body.username + " logged in as: admin");
 		res.status(200).send();
 	} else {
-		console.log("Incorrect credentials entered. Try Again.");
+		logger.info("Incorrect credentials entered. Try Again.");
 		res.status(401).send();
 	}
 })
@@ -82,11 +85,11 @@ app.post('/NewBlog', function(req, res) { //{author: "Gautam", title: "blah", de
 				db.collection('blogs').insertOne(body, function(err, result) {
 					if (err) throw err;
 					res.status(200).send();
-					console.log(body.author + " blog posted.\n");
+					logger.info(body.author + " blog posted.\n");
 					db.close();
 				})
 			} else {
-				console.log(body.author + " needs to sign up.\nBlog not posted.\n")
+				logger.info(body.author + " needs to sign up.\nBlog not posted.\n")
 				res.status(400).send();
 				db.close();
 			}
@@ -120,7 +123,7 @@ app.get('/Blog', function(req, res) {
 				res.status(200).send(result);
 			} else {
 				res.status(400).send();
-				console.log("Invalid blog_id.\n");
+				logger.info("Invalid blog_id.\n");
 			}
 			db.close();
 		})
@@ -148,16 +151,16 @@ app.post('/Comment', function(req, res) { //{blog_id: "34refdwepf90we", user_id:
 						newValues.comments.push(comment);
 						db.collection('blogs').updateOne(query, newValues, function(err, result) {
 							if (err) throw err;
-							console.log(comment.user_id + " commented on blog " + body.blog_id);
+							logger.info(comment.user_id + " commented on blog " + body.blog_id);
 							res.status(200).send();
 						})
 					} else {
-						console.log("User: " + body.user_id + " need to sign up before commenting.");
+						logger.info("User: " + body.user_id + " need to sign up before commenting.");
 						res.status(400).send();
 					}
 				})
 			} else {
-				console.log("Invalid blog to comment");
+				logger.info("Invalid blog to comment");
 				res.status(400).send();
 			}
 		})
@@ -172,10 +175,10 @@ app.delete('/Admin/DeletePost', function(req, res) {
 		db.collection('blogs').find(queryData).toArray(function(err, result) {
 			if (result.length) {
 				db.collection('blogs').remove({ _id: queryData.blogid });
-				console.log("Blog: " + queryData.blogid + " deleted.");
+				logger.info("Blog: " + queryData.blogid + " deleted.");
 				res.status(200).send();
 			} else {
-				console.log("Invalid blog_id.");
+				logger.info("Invalid blog_id.");
 				res.status(400).send();
 			}
 		})
@@ -195,11 +198,11 @@ app.put('/Admin/UpdatePost', function(req, res) {
 				newValues.description = body.description;
 				db.collection('blogs').updateOne(queryData, newValues, function(err, result) {
 					if (err) throw err;
-					console.log("Blog: " + queryData.blogid + " updated.");
+					logger.info("Blog: " + queryData.blogid + " updated.");
 					res.status(200).send();
 				})
 			} else {
-				console.log("Invalid blog_id.")
+				logger.info("Invalid blog_id.")
 				res.status(400).send();
 			}
 		})
@@ -207,5 +210,5 @@ app.put('/Admin/UpdatePost', function(req, res) {
 })
 
 http.listen(1337, function() {
-	console.log("Listening at port 1337\n");
+	logger.info("Listening at port 1337\n");
 });
